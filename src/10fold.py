@@ -10,9 +10,9 @@ import random
 def glove_w2v():
 
     # 数据有问题，utf-8不能解码某些位置
-    with open('../source_data/rt-polaritydata/rt-polarity.pos', 'r', encoding='utf-8', errors='ignore') as f:
+    with open('../raw_data/rt-polaritydata/rt-polarity.pos', 'r', encoding='utf-8', errors='ignore') as f:
         pos_lines = f.readlines()
-    with open('../source_data/rt-polaritydata/rt-polarity.neg', 'r', encoding='utf-8', errors='ignore') as f:
+    with open('../raw_data/rt-polaritydata/rt-polarity.neg', 'r', encoding='utf-8', errors='ignore') as f:
         neg_lines = f.readlines()
 
     pos_data = []

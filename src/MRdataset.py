@@ -1,32 +1,29 @@
-import pandas as pd
-import os
 from torch.utils.data.dataset import Dataset
+import loadglove as nlg
 
+class TxtDataset(Dataset):
+    # 此Dataset适合读入数据都在一个txt，按行划分，同一个txt内的标签是txt文件名
+    def __init__(self, neg_loc, pos_loc, word_to_index):
+        self.text = []
+        self.target = []
 
-
-
-class CSVDataset(Dataset):
-    def __init__(self, dirloc, word_to_index):
-        self.Text = pd.Series()
-        self.Target = pd.Series()
         # neg
-        neg_path = os.path.join(dirloc, 'neg/')
-        for dirpath, dirnames, filenames in os.walk(neg_path):
-            for filename in filenames:
-                if filename[-4:] == '.txt':
-                    fileloc = os.path.join(dirpath, filename)  # 文件的绝对路径
-                    with open(fileloc, 'r', encoding='utf-8') as f:
-                        self.Text.append(f.readlines())
-                        self.Target.append(0.)
-
+        with open(neg_loc, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            for line in lines:
+                indexes = nlg.sentence2index(line)
+                self.text.append(indexes)
+                self.target.append(0)
         # pos
-        pos_path = os.path.join(dirloc, 'pos/')
-        for dirpath, dirnames, filenames in os.walk(pos_path):
-            for filename in filenames:
-                if filename[-4:] == '.txt':
-                    fileloc = os.path.join(dirpath, filename)  # 文件的绝对路径
-                    with open(fileloc, 'r', encoding='utf-8') as f:
-                        self.Text.append(f.readlines())
-                        self.Target.append(0.)
+        with open(pos_loc, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            for line in lines:
+                indexes = nlg.sentence2index(line)
+                self.text.append(indexes)
+                self.target.append(1)
 
+    def __getitem__(self, index):
+        return self.text[index], self.target[index]
 
+    def __len__(self):
+        return len(self.text)
