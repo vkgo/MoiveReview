@@ -1,5 +1,6 @@
 from nltk import word_tokenize
 from nltk.corpus import stopwords
+import nltk
 
 def loadGlove(file_loc, file_encoding = 'utf-8'):
     # 加载glove
@@ -28,6 +29,9 @@ def tokenize(sentence, usestopwords = True):
     # 返回参数
     # words, array, 词数组
 
+    # ****注意****
+    # 使用这个前先要使用以下代码
+    # nltk.download('stopwords') # 这段用于下载nltk的数据
     words = word_tokenize(sentence)  # 分词
     if usestopwords == True:
         stops = set(stopwords.words("english"))
@@ -52,6 +56,7 @@ def sentence2index(sentence, dictionary):
 
 
     indexes = []
+
     words = tokenize(sentence, usestopwords=True) # 获取分词后的词数组
     for word in words:
         if word in dictionary: # 看词在不在字典里面
