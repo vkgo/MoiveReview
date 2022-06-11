@@ -1,6 +1,5 @@
 from nltk import word_tokenize
 from nltk.corpus import stopwords
-import nltk
 
 def loadGlove(file_loc, file_encoding = 'utf-8'):
     # 加载glove
