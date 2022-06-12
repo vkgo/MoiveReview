@@ -40,27 +40,33 @@ def tokenize(sentence, usestopwords = True):
 
 
 
-def sentence2index(sentence, dictionary):
+def sentence2index(sentence, dictionary, unknown = 'unk', maxlength = 0x3d3d3d):
     # 用于将单条句子转换成index array
     # 输入参数：
     # sentence, str, 待转换句子
     # dictionary, dic, vocab词典
+    # unknown, str, 词典没有词汇插入的unk
+    # maxlength, int, 最终indexes长度限制
     # 返回参数
     # indexes, array, index数组
 
     # 设置unknown
-    unknown = 'unk'
-    if unknown not in dictionary:
+    if unknown not in dictionary and unknown == 'unk':
         unknown = 'UNK'
 
 
     indexes = []
 
     words = tokenize(sentence, usestopwords=True) # 获取分词后的词数组
+    counter = 0
     for word in words:
         if word in dictionary: # 看词在不在字典里面
             indexes.append(dictionary[word])
         else:
             indexes.append(dictionary[unknown])
+        counter += 1
+        if counter == maxlength:
+            break
+
 
     return indexes

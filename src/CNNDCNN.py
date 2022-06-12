@@ -27,11 +27,11 @@ class CNNDCNN(nn.Module):
         )
 
     def forward(self, x, useDCNN):
-        x = self.embedding(x)  # [1853, 128, 300]
+        x = self.embedding(x)
 
-        x = x.unsqueeze(0)  # [1, 1853, 128, 300]
+        # x = x.unsqueeze(0)
 
-        x = x.permute(2, 0, 3, 1)  # [128, 1, 300, 1853]
+        # x = x.permute(2, 0, 3, 1)
 
         x = self.encoders(x)
 
