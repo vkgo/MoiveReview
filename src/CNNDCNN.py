@@ -27,12 +27,14 @@ class CNNDCNN(nn.Module):
         )
 
     def forward(self, x, useDCNN):
+        # [32, 30]
         x = self.embedding(x)
 
-        # x = x.unsqueeze(0)
 
+        # x = x.unsqueeze(0)
         # x = x.permute(2, 0, 3, 1)
 
+        # [32, 30, 300]
         x = self.encoders(x)
 
         if (useDCNN):
