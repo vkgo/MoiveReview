@@ -14,7 +14,13 @@
 
 完善了Dataset类
 
+2022-6-9
 
+写完dataset、dataloader
+
+2022-6-12
+
+划分好数据集、改模型bug
 
 
 
