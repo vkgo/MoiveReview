@@ -40,13 +40,14 @@ def tokenize(sentence, usestopwords = True):
 
 
 
-def sentence2index(sentence, dictionary, unknown = 'unk', maxlength = 0x3d3d3d):
+def sentence2index(sentence, dictionary, unknown = 'unk', minlength = 0, maxlength = 0x3d3d3d):
     # 用于将单条句子转换成index array
     # 输入参数：
     # sentence, str, 待转换句子
     # dictionary, dic, vocab词典
     # unknown, str, 词典没有词汇插入的unk
-    # maxlength, int, 最终indexes长度限制
+    # minlength, int, 最终indexes长度最小值限制
+    # maxlength, int, 最终indexes长度最大值限制
     # 返回参数
     # indexes, array, index数组
 
@@ -68,5 +69,8 @@ def sentence2index(sentence, dictionary, unknown = 'unk', maxlength = 0x3d3d3d):
         if counter == maxlength:
             break
 
+    while counter < minlength:
+        indexes.append(dictionary[unknown])
+        counter += 1
 
     return indexes
