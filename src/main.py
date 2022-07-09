@@ -55,6 +55,7 @@ for epoch in range(epoch):
             labels = labels.cuda()
         counter += 1
         if useDCNN == False: # 不使用DCNN，普通的分类任务
+
             module_output = module(texts, False)
 
             loss_result = loss_fn(module_output, labels)

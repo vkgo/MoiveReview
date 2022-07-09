@@ -32,6 +32,9 @@ class CNNDCNN(nn.Module):
         self.decoder2 = nn.ConvTranspose2d(in_channels=600, out_channels=300, kernel_size=[1, 5], stride=2, bias=True)
         self.decoder3 = nn.ConvTranspose2d(in_channels=300, out_channels=1, kernel_size=[config.embedding_dimension, 5], stride=2, bias=True)
 
+        self.flatten = nn.Flatten()
+        self.fc = nn.Linear(500, 2)  # 全连接层
+
     def forward(self, x, useDCNN):
         # [32, 30]
         x = self.embedding(x)
@@ -47,7 +50,7 @@ class CNNDCNN(nn.Module):
         # RuntimeError: Given groups=1, weight of size [300, 1, 300, 5],
         # expected input[1, 32, 60, 300] to have 1 channels, but got 32 channels instead
 
-        x = x.type(torch.cuda.FloatTensor)
+        # x = x.type(torch.cuda.FloatTensor)
         x = self.encoder1(x)
         x = self.encoder2(x)
         x = self.encoder3(x)
@@ -57,6 +60,12 @@ class CNNDCNN(nn.Module):
             x = self.decoder1(x)
             x = self.decoder2(x)
             x = self.decoder3(x)
+        else:
+            # [32, 500, 1, 1]
+            x = x.squeeze(2)
+            x = self.flatten(x)
+            # [32, 500]
+            x = self.fc(x)
 
         return x
 

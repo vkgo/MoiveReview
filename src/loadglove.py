@@ -1,3 +1,4 @@
+import numpy
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 
@@ -16,7 +17,7 @@ def loadGlove(file_loc, file_encoding = 'utf-8'):
         for index, line in enumerate(file1.readlines()):
             row = line.strip().split(' ')
             glove_vocab_dic[row[0]] = index
-            emb.append([float(x) for x in row[1:]])
+            emb.append([numpy.float32(x) for x in row[1:]])
 
     return glove_vocab_dic, emb
 

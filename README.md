@@ -32,3 +32,23 @@ main函数添加完不使用DCNN的模型训练、验证部分，还有bug为调
 
 CNN部分模型调试完成，不过模型内有个数据转换，勉强能用，但是放在模型外更好
 
+2022-7-9
+
+解决报错：Input type (torch.cuda.DoubleTensor) and weight type (torch.cuda.FloatTensor) should be the same
+
+原因：祖传源码加载词向量里面，emb的值转换为float，后面经过Tensor转换后便是DoubleTensor，由此导致数据集输入的数据embedding之后是DoubleFloat。
+
+源码位置：loadglove.py的loadGlove()函数，最后把float()改为了numpy.float32()
+
+
+
+添加了CNN模型后面的全连接层
+
+报错：RuntimeError: mat1 and mat2 shapes cannot be multiplied (16000x1 and 500x2)
+
+原因：全连接层尺寸对不上输入。输入通过squeeze降维，想从[32, 500, 1, 1]两次降维到[32, 500]但是发现只有第一次有用，要用flatten才行。
+
+
+
+可以成功跑一个循环训练，第二次的卡在collate_fn函数，也就是划分batch的那里。报错：TypeError: expected Tensor as element 19 in argument 0, but got list。
+
