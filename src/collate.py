@@ -13,5 +13,5 @@ def collate_fn(batch_data):
     batch_data.sort(key=lambda xi: len(xi[0]), reverse=True)
     sent_seq = [xi[0] for xi in batch_data]
     label = [xi[1] for xi in batch_data]
-    padded_sent_seq = pad_sequence(sent_seq, batch_first=True, padding_value=0) # 等长处理
-    return padded_sent_seq, torch.tensor(label, dtype=torch.long)
+    # padded_sent_seq = pad_sequence(sent_seq, batch_first=True, padding_value=0) # 等长处理
+    return sent_seq, torch.tensor(label, dtype=torch.long)

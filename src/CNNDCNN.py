@@ -37,7 +37,7 @@ class CNNDCNN(nn.Module):
 
     def forward(self, x, useDCNN):
         # [32, 30]
-        x = self.embedding(x)
+        x = self.embedding(x.long())
 
         # [32, 60, 300]
         x = x.unsqueeze(0)

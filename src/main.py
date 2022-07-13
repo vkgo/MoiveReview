@@ -29,8 +29,8 @@ train_dataset = train_dataset.dataset
 val_dataset = val_dataset.dataset
 
 # build dataloader
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, collate_fn=collate.collate_fn)
-val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, collate_fn=collate.collate_fn)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size) # , collate_fn=collate.collate_fn
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size)
 
 # 设置config
 module_config = config.Config(len(emb), embedding_dimension=300, wordvectors=emb)
@@ -106,7 +106,7 @@ for epoch in range(epoch):
 
         # 保存模型
         # 设置隔多少epoch保存
-        epochgap = 999
-        if epoch % epochgap == 0:
-            SavedLoc = "../SavedModel/useDCNN-" + useDCNN + "/mymodule_{}.pth".format(epoch)
-            torch.save(module, SavedLoc)
+        # epochgap = 999
+        # if epoch % epochgap == 0:
+        #     SavedLoc = "../SavedModel/useDCNN-" + str(useDCNN) + "/mymodule_{}.pth".format(epoch)
+        #     torch.save(module, SavedLoc)

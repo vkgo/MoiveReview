@@ -1,4 +1,5 @@
 import numpy
+import torch
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 
@@ -63,15 +64,15 @@ def sentence2index(sentence, dictionary, unknown = 'unk', minlength = 0, maxleng
     counter = 0
     for word in words:
         if word in dictionary: # 看词在不在字典里面
-            indexes.append(dictionary[word])
+            indexes.append(torch.tensor(dictionary[word], dtype=torch.long))
         else:
-            indexes.append(dictionary[unknown])
+            indexes.append(torch.tensor(dictionary[unknown], dtype=torch.long))
         counter += 1
         if counter == maxlength:
             break
 
     while counter < minlength:
-        indexes.append(dictionary[unknown])
+        indexes.append(torch.tensor(dictionary[unknown], dtype=torch.long))
         counter += 1
 
     return indexes
