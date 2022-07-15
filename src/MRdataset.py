@@ -14,11 +14,11 @@ class TxtDataset(Dataset):
                 lines_neg = f_neg.readlines()
                 lines_pos = f_pos.readlines()
                 for line in lines_neg:
-                    indexes = lg.sentence2index(line, dictionary=word2index, minlength=60, maxlength=60)
+                    indexes = lg.sentence2index(line, dictionary=word2index, minlength=57, maxlength=57)
                     self.text = torch.cat((self.text, torch.as_tensor([indexes])))
                     self.target.append(torch.tensor(0, dtype=torch.long))
                 for line in lines_pos:
-                    indexes = lg.sentence2index(line, dictionary=word2index, minlength=60, maxlength=60)
+                    indexes = lg.sentence2index(line, dictionary=word2index, minlength=57, maxlength=57)
                     self.text = torch.cat((self.text, torch.as_tensor([indexes])))
                     self.target.append(torch.tensor(1, dtype=torch.long))
 

@@ -64,19 +64,22 @@ for epoch in range(epoch):
 
             round_loss += loss_result.item()
 
-            if counter % 100 == 0:
-                end_time = time.time()
-                print(end_time - start_time)
-                print("第{}次训练 平均损失{} 用时{}".format(counter, round_loss / 100, end_time - start_time))
-                round_loss = 0.0
-                start_time = time.time()
         elif useDCNN == True: # 使用DCNN
-            module_output = module(texts, True)
-            loss_result = loss_matrix(module_output, texts)
+            ori_x, module_output = module(texts, True)
+            loss_result = loss_matrix(module_output, ori_x)
 
             optim.zero_grad()  # 梯度清零
             loss_result.backward()  # 反向传播
             optim.step()  # 生效
+
+            round_loss += loss_result.item()
+
+        if counter % 100 == 0:
+            end_time = time.time()
+            print(end_time - start_time)
+            print("第{}次训练 平均损失{} 用时{}".format(counter, round_loss / 100, end_time - start_time))
+            round_loss = 0.0
+            start_time = time.time()
 
 
 
