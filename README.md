@@ -4,7 +4,7 @@
 
 ./raw_data/ 数据集
 
-# 更新日志
+# 开发日志
 
 2022-6-8
 
@@ -52,3 +52,18 @@ CNN部分模型调试完成，不过模型内有个数据转换，勉强能用�
 
 可以成功跑一个循环训练，第二次的卡在collate_fn函数，也就是划分batch的那里。报错：TypeError: expected Tensor as element 19 in argument 0, but got list。
 
+2022-7-13
+
+解决了TypeError: expected Tensor as element 19 in argument 0, but got list
+
+主要经验，dataset出来的值要都转为Tensor，别用Tensor List，如果转Tensor使index变成FloatTensor类型的话，在embedding前转为long就行。
+
+2022-7-15
+
+解决了正确率一直是0.5的问题
+
+原因：数据没打乱，negative数据在前，postive数据在后，导致都是后面过拟合，输出都是1。
+
+
+
+写了矩阵相减的loss function，但是DCNN层出来的是57，对不上60。

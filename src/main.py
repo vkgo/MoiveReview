@@ -6,12 +6,13 @@ import config
 import CNNDCNN
 import numpy as np
 import time
-import collate
+import matrixloss as mloss
 
 batch_size = 32
 learningrate = 1e-3
 epoch = 32
-useDCNN = False
+useDCNN = True
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # import nltk
 # nltk.download('stopwords') # 这段用于下载nltk的数据
@@ -35,13 +36,11 @@ val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shu
 # 设置config
 module_config = config.Config(len(emb), embedding_dimension=300, wordvectors=emb)
 
-module = CNNDCNN.CNNDCNN(config=module_config)
-loss_fn = torch.nn.CrossEntropyLoss()
+module = CNNDCNN.CNNDCNN(config=module_config).to(device)
+loss_fn = torch.nn.CrossEntropyLoss().to(device)
+loss_matrix = mloss.MatrixLoss().to(device)
 optim = torch.optim.Adam(params=module.parameters(), lr=learningrate)
 
-if torch.cuda.is_available():
-    module.cuda()
-    loss_fn.cuda()
 
 for epoch in range(epoch):
     print("***第{}轮训练***".format(epoch + 1))
@@ -50,9 +49,8 @@ for epoch in range(epoch):
     round_loss = 0.0 # 每轮的损失
     module.train()
     for texts, labels in train_loader:
-        if torch.cuda.is_available():
-            texts = texts.cuda()
-            labels = labels.cuda()
+        texts = texts.to(device)
+        labels = labels.to(device)
         counter += 1
         if useDCNN == False: # 不使用DCNN，普通的分类任务
 
@@ -72,9 +70,13 @@ for epoch in range(epoch):
                 print("第{}次训练 平均损失{} 用时{}".format(counter, round_loss / 100, end_time - start_time))
                 round_loss = 0.0
                 start_time = time.time()
-        elif useDCNN == True:
-            print(111)
+        elif useDCNN == True: # 使用DCNN
+            module_output = module(texts, True)
+            loss_result = loss_matrix(module_output, texts)
 
+            optim.zero_grad()  # 梯度清零
+            loss_result.backward()  # 反向传播
+            optim.step()  # 生效
 
 
 
@@ -89,17 +91,15 @@ for epoch in range(epoch):
 
             for texts, labels in val_loader:
                 testdatalength += len(labels)
-                if torch.cuda.is_available():
-                    texts = texts.cuda()
-                    labels = labels.cuda()
+                texts = texts.to(device)
+                labels = labels.to(device)
                 counter += 1
                 module_output = module(texts, False)
                 loss_result = loss_fn(module_output, labels)
                 total_loss += loss_result.item()
 
                 correct_num += (module_output.argmax(1) == labels).sum().item()
-                print(module_output.argmax(1))
-                print(labels)
+
             avg_loss = total_loss / counter
             accuracy = correct_num / testdatalength
             print("##验证集每batches平均损失:{}".format(avg_loss))
