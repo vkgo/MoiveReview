@@ -29,8 +29,8 @@ train_dataset = train_dataset.dataset
 val_dataset = val_dataset.dataset
 
 # build dataloader
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size) # , collate_fn=collate.collate_fn
-val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True) # , collate_fn=collate.collate_fn
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 
 # 设置config
 module_config = config.Config(len(emb), embedding_dimension=300, wordvectors=emb)
@@ -98,7 +98,8 @@ for epoch in range(epoch):
                 total_loss += loss_result.item()
 
                 correct_num += (module_output.argmax(1) == labels).sum().item()
-
+                print(module_output.argmax(1))
+                print(labels)
             avg_loss = total_loss / counter
             accuracy = correct_num / testdatalength
             print("##验证集每batches平均损失:{}".format(avg_loss))
