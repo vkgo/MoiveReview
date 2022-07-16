@@ -20,9 +20,6 @@ class CNNDCNN(nn.Module):
         self.decoder2 = nn.ConvTranspose2d(in_channels=600, out_channels=300, kernel_size=[1, 5], stride=2, bias=True)
         self.decoder3 = nn.ConvTranspose2d(in_channels=300, out_channels=1, kernel_size=[config.embedding_dimension, 5], stride=2, bias=True)
 
-        self.flatten = nn.Flatten()
-        self.fc = nn.Linear(500, 2)  # 全连接层
-
     def forward(self, x, useDCNN):
         # [32, 30]
         ori_x = self.embedding(x.long())
@@ -48,12 +45,20 @@ class CNNDCNN(nn.Module):
             x = x.permute(0, 2, 1)
             return ori_x, x
         else:
-            # [32, 500, 1, 1]
-            x = x.squeeze(2)
-            x = self.flatten(x)
-            # [32, 500]
-            x = self.fc(x)
-
             return x
+
+class fclayer(nn.Module):
+    def __init__(self):
+        super(fclayer, self).__init__()
+        self.flatten = nn.Flatten()
+        self.fc = nn.Linear(500, 2)  # 全连接层
+
+    def forward(self, x):
+        # [32, 500, 1, 1]
+        x = x.squeeze(2)
+        x = self.flatten(x)
+        # [32, 500]
+        x = self.fc(x)
+        return x
 
 
