@@ -1,5 +1,9 @@
 # MoiveReview
 
+Model: CNNDCNN
+
+Dataset: MoiveReview
+
 # 文件说明
 
 ./raw_data/ 存放数据集
