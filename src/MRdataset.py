@@ -1,7 +1,6 @@
 import torch
 from torch.utils.data.dataset import Dataset
 import loadglove as lg
-import numpy as np
 
 class TxtDataset(Dataset):
     # 此Dataset适合读入数据都在一个txt，按行划分，同一个txt内的标签是txt文件名
@@ -21,8 +20,6 @@ class TxtDataset(Dataset):
                     indexes = lg.sentence2index(line, dictionary=word2index, minlength=57, maxlength=57)
                     self.text = torch.cat((self.text, torch.as_tensor([indexes])))
                     self.target.append(torch.tensor(1, dtype=torch.long))
-
-
 
     def __getitem__(self, index):
         return self.text[index], self.target[index]
